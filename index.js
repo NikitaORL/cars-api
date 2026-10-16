@@ -31,12 +31,41 @@ app.get('/cars/:id', (req, res) => {
 })
 
 app.post('/cars', (req, res) => {
-    cars.push({
+    if (!req.body.name || !req.body.price) {
+        return res.status(400).send({ error: 'One or all params are missing' })
+    }
+    let car = {
         id: cars.length + 1,
         price: req.body.price,
         name: req.body.name
-    })
-    res.end()
+    }
+    cars.push(car)
+    res.status(201)
+        .location(`${getBaseUrl(req)}/cars/${cars.length}`)
+        .send(car)
+})
+
+app.put('/cars/:id', (req, res) => {
+    if (typeof cars[req.params.id - 1] === 'undefined') {
+        return res.status(404).send({error: "Car not found"})
+    }
+    if (!req.body.name || !req.body.price) {
+        return res.status(400).send({ error: 'One or all params are missing' })
+    }
+    cars[req.params.id - 1] = {
+        id: req.params.id,
+        name: req.body.name,
+        price: req.body.price
+    }
+    res.send(cars[req.params.id - 1])
+})
+
+app.delete('/cars/:id', (req, res) => {
+    if (typeof cars[req.params.id - 1] === 'undefined') {
+        return res.status(404).send({error: "Car not found"})
+    }
+    cars.splice(req.params.id - 1, 1)
+    res.status(204).end()
 })
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
@@ -44,3 +73,8 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 app.listen(port, () => {
     console.log(`API is running at http://localhost:${port}`)
 })
+
+function getBaseUrl(req) {
+    return req.connection && req.connection.encrypted
+        ? 'https' : 'http' + `://${req.headers.host}`
+}
