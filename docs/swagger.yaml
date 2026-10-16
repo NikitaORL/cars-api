@@ -48,7 +48,30 @@ paths:
                   price: 55000
       responses:
         '201':
-          description: Car was added successfully
+          description: Car was created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                New car:
+                  value:
+                    id: 9
+                    name: Ford Mustang
+                    price: 55000
+        '400':
+          description: One or all params are missing
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                Error:
+                  value:
+                    error: One or all params are missing
   /cars/{id}:
     get:
       tags:
@@ -88,3 +111,31 @@ paths:
                 Car /w+ was not found:
                   value:
                     error: Car \w+ was not found in car array
+    delete:
+      tags:
+        - cars
+      summary: Delete a car
+      description: Deletes a car from the cars array
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the car
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Car was deleted successfully
+        '404':
+          description: Car not found in cars array
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                Car not found:
+                  value:
+                    error: Car not found
