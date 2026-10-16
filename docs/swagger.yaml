@@ -25,6 +25,30 @@ paths:
                     - Toyota Supra MK4
                     - BMW E39
                     - Mercedes S-klass W220
+    post:
+      tags:
+        - cars
+      summary: Add a new car
+      description: Adds a new car to the cars array
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                price:
+                  type: number
+            examples:
+              New car:
+                value:
+                  name: Ford Mustang
+                  price: 55000
+      responses:
+        '201':
+          description: Car was added successfully
   /cars/{id}:
     get:
       tags:
