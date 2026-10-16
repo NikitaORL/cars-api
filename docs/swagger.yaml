@@ -1,0 +1,66 @@
+openapi: 3.0.2
+info:
+  title: Cars API
+  version: 1.0.0
+  description: This is a Swagger UI for our Cars API
+paths:
+  /cars:
+    get:
+      tags:
+        - cars
+      summary: Get a list of all cars
+      description: Returns a list of all cars in API
+      responses:
+        '200':
+          description: Returns a list of cars
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              examples:
+                List of cars:
+                  value:
+                    - Toyota Supra MK4
+                    - BMW E39
+                    - Mercedes S-klass W220
+  /cars/{id}:
+    get:
+      tags:
+        - cars
+      summary: Get full details of a given car
+      description: Returns full details of a specific car by its ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the car
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Returns full details of a car
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                Full information about a given car:
+                  value:
+                    id: 1
+                    name: Toyota Supra MK4
+                    price: 45000
+        '404':
+          description: Car not found in cars array
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                Car /w+ was not found:
+                  value:
+                    error: Car \w+ was not found in car array

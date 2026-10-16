@@ -1,6 +1,7 @@
 const express = require('express')
 const swaggerUi = require('swagger-ui-express')
-const swaggerDocument = require('./docs/swagger.json')
+const yamljs = require('yamljs')
+const swaggerDocument = yamljs.load('./docs/swagger.yaml')
 
 const app = express()
 const port = 8080
@@ -22,7 +23,10 @@ app.get('/cars', (req, res) => {
 })
 
 app.get('/cars/:id', (req, res) => {
-    res.send(cars[req.params.id])
+    if (typeof cars[req.params.id - 1] === 'undefined') {
+        return res.status(404).send({error: "Car not found"})
+    }
+    res.send(cars[req.params.id - 1])
 })
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
