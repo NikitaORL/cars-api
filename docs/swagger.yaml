@@ -1,0 +1,215 @@
+openapi: 3.0.2
+security:
+  - basicAuth: []
+info:
+  title: Cars API
+  version: 1.0.0
+  description: This is a Swagger UI for our Cars API
+paths:
+  /cars:
+    get:
+      tags:
+        - cars
+      summary: Get a list of all cars
+      description: Returns a list of all cars in API
+      responses:
+        '200':
+          description: Returns a list of cars
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              examples:
+                List of cars:
+                  value:
+                    - Toyota Supra MK4
+                    - BMW E39
+                    - Mercedes S-klass W220
+    post:
+      tags:
+        - cars
+      summary: Add a new car
+      description: Adds a new car to the cars array
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                price:
+                  type: number
+            examples:
+              New car:
+                value:
+                  name: Ford Mustang
+                  price: 55000
+      responses:
+        '201':
+          description: Car was created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                New car:
+                  value:
+                    id: 9
+                    name: Ford Mustang
+                    price: 55000
+        '400':
+          description: One or all params are missing
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                Error:
+                  value:
+                    error: One or all params are missing
+  /cars/{id}:
+    get:
+      tags:
+        - cars
+      summary: Get full details of a given car
+      description: Returns full details of a specific car by its ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the car
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Returns full details of a car
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                Full information about a given car:
+                  value:
+                    id: 1
+                    name: Toyota Supra MK4
+                    price: 45000
+        '404':
+          description: Car not found in cars array
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                Car /w+ was not found:
+                  value:
+                    error: Car \w+ was not found in car array
+    put:
+      tags:
+        - cars
+      summary: Update a car
+      description: Updates an existing car in the cars array
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the car
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                price:
+                  type: number
+            examples:
+              Updated car:
+                value:
+                  name: Toyota Supra MK4 Turbo
+                  price: 50000
+      responses:
+        '200':
+          description: Car was updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                Updated car:
+                  value:
+                    id: 1
+                    name: Toyota Supra MK4 Turbo
+                    price: 50000
+        '400':
+          description: One or all params are missing
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                Error:
+                  value:
+                    error: One or all params are missing
+        '404':
+          description: Car not found in cars array
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                Car not found:
+                  value:
+                    error: Car not found
+    delete:
+      tags:
+        - cars
+      summary: Delete a car
+      description: Deletes a car from the cars array
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the car
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Car was deleted successfully
+        '404':
+          description: Car not found in cars array
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                Car not found:
+                  value:
+                    error: Car not found
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
